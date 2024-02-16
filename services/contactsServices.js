@@ -1,6 +1,8 @@
 const fs = require("fs/promises");
 const path = require("path");
-const { nanoid } = require("nanoid");
+// const { nanoid } = require("nanoid");
+// const nanoid = require("nanoid");
+// import nanoid from "nanoid";
 
  
 const contactsPath = path.join(__dirname,"db", "contacts.json");
@@ -38,7 +40,7 @@ async function addContact(name, email, phone) {
   const contacts = await listContacts();
   
   const newContact = {
-    id: nanoid(),
+    id: Math.random(),
     name,
     email,
     phone
@@ -54,5 +56,5 @@ module.exports = {
   listContacts,
   getContactById,
   removeContact,
-  addContact,
+  addContact
 }
