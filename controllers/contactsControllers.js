@@ -14,7 +14,7 @@ const getAllContacts = async (req, res, next) => {
         next(error);
      }
     
- };
+ }; // работает
 
 const getOneContact = async (req, res, next) => {
     try {
@@ -30,12 +30,12 @@ const getOneContact = async (req, res, next) => {
     catch (error) {
        next(error)
     }
- };
+ }; // работает
 
 const deleteContact = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const result = contactsServices.removeContact(id);
+        const result = await contactsServices.removeContact(id);
         if (!result) {
             throw HttpError(404, "Not Found");
         };
@@ -44,7 +44,7 @@ const deleteContact = async (req, res, next) => {
     catch (error) {
         next(error)
     }
- };
+ }; // удаляет но уходит в долгую загрузку
 
 const createContact = async (req, res, next) => {
     try { 
@@ -60,7 +60,7 @@ const createContact = async (req, res, next) => {
     catch (error) {
         next(error)
     }
- };
+ };// error HttpError is not a function - не работает
 
 const updateContact = async (req, res, next) => {
  try { 
@@ -70,7 +70,7 @@ const updateContact = async (req, res, next) => {
             throw HttpError(400, error.message)
         }
      const { id } = req.params;
-     const result = contactsServices.updateById(id, req.body);
+     const result = await contactsServices.updateById(id, req.body);
       if (!result) {
             throw HttpError(404, "Not Found");
         }
@@ -80,7 +80,7 @@ const updateContact = async (req, res, next) => {
     catch (error) {
         next(error)
     }
- };
+ }; // error HttpError is not a function - не работает
  
 
 module.exports = {

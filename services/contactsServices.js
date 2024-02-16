@@ -5,8 +5,10 @@ const { nanoid } = require("nanoid");
 
 
  
-const contactsPath = path.join(__dirname,"db", "contacts.json");
+// const contactsPath = path.join(__dirname, "db", "contacts.json");
 
+
+const contactsPath = path.join("db","contacts.json");
 
 
 async function listContacts() {
