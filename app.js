@@ -9,12 +9,10 @@ const morgan = require("morgan");
 const cors = require("cors");
 const contactsRouter = require("./routes/contactsRouter");
 
-
 const app = express(); // here we created web server
 
-
 app.get("/books", (request, response) => {
-  response.send("<h1>Books in my library</h1>")
+  response.send("<h1>Books in my library</h1>");
 });
 
 app.use(morgan("tiny"));
