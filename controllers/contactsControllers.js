@@ -64,6 +64,11 @@ const updateContact = async (req, res, next) => {
       throw HttpError(400, error.message);
     }
 
+     if (Object.keys(req.body).length === 0) {
+      throw HttpError(400, "Body is empty");
+    }
+   
+
     const result = await contactsServices.updateById(id, req.body);
     if (!result) {
       throw HttpError(404, "Not Found");
