@@ -15,9 +15,10 @@ const contactSchema = new Schema({
     favorite: {
         type: Boolean,
         default: false,
-    },
-});
-const Contact = model("Contact", contactSchema);
+    }
+}
+);
+const Contact = model("сontact", contactSchema);
  
 export default Contact;
 
