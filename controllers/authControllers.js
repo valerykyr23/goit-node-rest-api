@@ -1,14 +1,23 @@
 import User from "../models/user.js"; 
 import HttpError from "../helpers/HttpError.js"; 
 import bcrypt from "bcrypt";
-// const createHashPassword = async (password) => {
-//   const result = await bcrypt.hash(password, 10);
-//   console.log(result);
-//   const compareResult = await bcrypt.compare(password, result );
-//   console.log(compareResult);
-// };
+import jsonwebtoken from "jsonwebtoken";
+import "dotenv/config";
+const SECRET_KEY = process.env.SECRET_KEY;
 
-// createHashPassword("12345");
+
+
+
+
+
+// try { 
+//     const { id } = jsonwebtoken.verify(token, SECRET_KEY);
+//     console.log(id);
+// }
+// catch (error) {
+//     console.log(error.message);
+// }
+
 
 
 export const register = async (req, res, next) => {
@@ -20,9 +29,32 @@ export const register = async (req, res, next) => {
         throw HttpError(409, "Email is already in use");
     };
     const hashPassword = await bcrypt.hash(password, 10);
-    const newUser = await User.create({...req.body, password: hashPassword});
+    const newUser = await User.create({ ...req.body, password: hashPassword });
     res.json({
         email: newUser.email,
         name: newUser.name
     })
-}
+};
+
+export const login = async (req, res, next) => {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+        throw HttpError(401, "Email or password is invalid");
+    };
+
+    const passwordCompare = await bcrypt.compare(password, user.password);
+    if (!passwordCompare) {
+        throw HttpError(401, "Email or password is invalid");
+    };
+
+    const payload = {
+    id: user._id,
+};
+
+    const token = jsonwebtoken.sign(payload, SECRET_KEY, { expiresIn: "7d" }); 
+    
+    res.json({
+        token,
+    })
+};
