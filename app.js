@@ -4,7 +4,6 @@ import "./db/contacts.js";
 import contactsRouter from "./routes/contactsRouter.js";
 import authRouter from "./routes/authRouter.js";
 
-
 const app = express();
 
 app.use(express.json());
