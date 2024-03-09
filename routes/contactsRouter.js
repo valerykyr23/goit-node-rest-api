@@ -7,19 +7,20 @@ import {
   updateContact,
   updateStatusContact,
 } from "../controllers/contactsControllers.js";
+import autenticate from "../middlewars.js/autenticate.js";
 
 const contactsRouter = express.Router();
 
-contactsRouter.get("/", getAllContacts);
+contactsRouter.get("/", autenticate, getAllContacts);
 
-contactsRouter.get("/:id", getOneContact);
+contactsRouter.get("/:id", autenticate, getOneContact);
 
-contactsRouter.delete("/:id", deleteContact);
+contactsRouter.delete("/:id", autenticate, deleteContact);
 
-contactsRouter.post("/", createContact);
+contactsRouter.post("/", autenticate, createContact);
 
-contactsRouter.put("/:id", updateContact);
+contactsRouter.put("/:id", autenticate, updateContact);
 
-contactsRouter.patch("/:id/favorite", updateStatusContact);
+contactsRouter.patch("/:id/favorite", autenticate, updateStatusContact);
 
 export default contactsRouter;

@@ -7,8 +7,11 @@ import {
 import HttpError from "../helpers/HttpError.js";
 
 export const getAllContacts = async (req, res, next) => {
+
+  const { _id: owner } = req.user;
+
   try {
-    const contacts = await Contact.find();
+    const contacts = await Contact.find({owner});
     res.status(200).json(contacts);
   } catch (error) {
     next(error);
@@ -48,9 +51,11 @@ export const createContact = async (req, res, next) => {
     const { error } = createContactSchema.validate(req.body);
     if (error) {
       throw HttpError(400, error.message);
-    }
+    };
 
-    const newPhoneContact = await Contact.create(req.body);
+    const { _id: owner } = req.user;
+
+    const newPhoneContact = await Contact.create({...req.body, owner });
     res.status(201).json(newPhoneContact);
   } catch (error) {
     next(error);

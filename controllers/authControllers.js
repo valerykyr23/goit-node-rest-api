@@ -5,21 +5,6 @@ import jsonwebtoken from "jsonwebtoken";
 import "dotenv/config";
 const SECRET_KEY = process.env.SECRET_KEY;
 
-
-
-
-
-
-// try { 
-//     const { id } = jsonwebtoken.verify(token, SECRET_KEY);
-//     console.log(id);
-// }
-// catch (error) {
-//     console.log(error.message);
-// }
-
-
-
 export const register = async (req, res, next) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
