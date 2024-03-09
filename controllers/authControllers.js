@@ -5,32 +5,34 @@ import jsonwebtoken from "jsonwebtoken";
 import "dotenv/config";
 const SECRET_KEY = process.env.SECRET_KEY;
 
-export const register = async (req, res, next) => {
+export const register = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     
 
     if (user) {
-        throw HttpError(409, "Email is already in use");
+        throw HttpError(409, "Email  in use");
     };
     const hashPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create({ ...req.body, password: hashPassword });
     res.json({
+        user: {
         email: newUser.email,
-        name: newUser.name
+            subscription: newUser.subscription
+        }
     })
 };
 
-export const login = async (req, res, next) => {
+export const login = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-        throw HttpError(401, "Email or password is invalid");
+        throw HttpError(401, "Email or password is wrong");
     };
 
     const passwordCompare = await bcrypt.compare(password, user.password);
     if (!passwordCompare) {
-        throw HttpError(401, "Email or password is invalid");
+        throw HttpError(401, "Email or password is wrong");
     };
 
     const payload = {
@@ -41,23 +43,28 @@ export const login = async (req, res, next) => {
     await User.findByIdAndUpdate(user._id, { token });
     res.json({
         token,
+        user: {
+            email: user.email,
+            subscription: user.subscription
+        }
     })
 };
 
 
-export const getCurrent = async (req, res, next) => {
-    const { name, email } = req.user;
+export const getCurrent = async (req, res) => {
+    const { subscription, email } = req.user;
     res.json({
-        name,
-        email
+       
+        email,
+        subscription
     })
 };
 
 
-export const logout = async (req, res, next) => {
+export const logout = async (req, res) => {
     const { _id } = req.user;
     await User.findByIdAndUpdate(_id, { token: null });
-    res.json({
-        message: "Logout was successfull"
+    res.status(204).json({
+        message: "No Content"
     })
 }

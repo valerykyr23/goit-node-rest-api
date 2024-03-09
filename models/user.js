@@ -6,24 +6,31 @@ import handleMongooseError from "../helpers/mongooseError.js";
 const emailRegexp = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
 const userSchema = new Schema({
-    name: {
-        type: String,
-        required: true,
-    },
+    // name: {
+    //     type: String,
+    //     required: true,
+    // },
     email: {
         type: String,
         match: emailRegexp,
         unique: true,
-        required: true,
+        required: [true, 'Email is required'],
     },
     password: {
         type: String,
-        minlength: 6,
-        required: true
+        required: [true, 'Password is required'],
+        minlength: 6
+       
     },
     token: {
     type: String,
     default: null,
+    },
+
+    subscription: {
+    type: String,
+    enum: ["starter", "pro", "business"],
+    default: "starter"
   },
 }, { versionKey: false, timestamps: true });
 
@@ -31,7 +38,7 @@ const userSchema = new Schema({
 userSchema.post("save", handleMongooseError);
 
 export const registerSchema = Joi.object({
-    name: Joi.string().required(),
+    // name: Joi.string().required(),
     email: Joi.string().pattern(emailRegexp).required(),
     password: Joi.string().min(6).required(),
 
