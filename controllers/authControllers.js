@@ -5,7 +5,8 @@ import jsonwebtoken from "jsonwebtoken";
 import "dotenv/config";
 const SECRET_KEY = process.env.SECRET_KEY;
 
-export const register = async (req, res) => {
+export const register = async (req, res, next) => {
+  try {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
 
@@ -19,10 +20,16 @@ export const register = async (req, res) => {
       email: newUser.email,
       subscription: newUser.subscription,
     },
-  });
+  })
+  }
+  catch (error) {
+    next(error);
+  }
 };
 
-export const login = async (req, res) => {
+export const login = async (req, res, next) => {
+
+  try {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
   if (!user) {
@@ -46,7 +53,11 @@ export const login = async (req, res) => {
       email: user.email,
       subscription: user.subscription,
     },
-  });
+  })
+  }
+  catch (error) {
+    next(error);
+  }
 };
 
 export const getCurrent = async (req, res) => {
