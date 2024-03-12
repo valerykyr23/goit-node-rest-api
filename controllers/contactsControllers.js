@@ -52,7 +52,6 @@ export const deleteContact = async (req, res, next) => {
 
 export const createContact = async (req, res, next) => {
   try {
-    
     const { error } = createContactSchema.validate(req.body);
     const { name, email, phone } = req.body;
     const { _id: owner } = req.user;
@@ -60,13 +59,9 @@ export const createContact = async (req, res, next) => {
       throw HttpError(400, error.message);
     }
 
-    const newPhoneContact = await Contact.create(
-     { name, email, phone, owner }
-    );
+    const newPhoneContact = await Contact.create({ name, email, phone, owner });
 
-    res.status(201).json(
-     newPhoneContact
-    );
+    res.status(201).json(newPhoneContact);
   } catch (error) {
     next(error);
   }
@@ -84,9 +79,10 @@ export const updateContact = async (req, res, next) => {
     }
 
     const { id } = req.params;
+    const { _id: owner } = req.user;
 
     const updatedContact = await Contact.findOneAndUpdate(
-      { _id: id, owner: req.user.id },
+      { _id: id, owner },
       req.body,
       { new: true }
     );
@@ -106,11 +102,12 @@ export const updateStatusContact = async (req, res, next) => {
       throw HttpError(404, "Not Found");
     }
     const { id } = req.params;
+    const { _id: owner } = req.user;
     const { favorite } = req.body;
     const updatedStatus = await Contact.findOneAndUpdate(
       {
         _id: id,
-        owner: req.user.id,
+        owner,
       },
       { favorite },
       {
