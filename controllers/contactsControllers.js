@@ -52,6 +52,7 @@ export const deleteContact = async (req, res, next) => {
 
 export const createContact = async (req, res, next) => {
   try {
+    
     const { error } = createContactSchema.validate(req.body);
     const { name, email, phone } = req.body;
     if (error) {
@@ -64,9 +65,10 @@ export const createContact = async (req, res, next) => {
     });
 
     res.status(201).json({
+     
       name,
       email,
-      phone,
+      phone
     });
   } catch (error) {
     next(error);
