@@ -55,21 +55,18 @@ export const createContact = async (req, res, next) => {
     
     const { error } = createContactSchema.validate(req.body);
     const { name, email, phone } = req.body;
+    const { _id: owner } = req.user;
     if (error) {
       throw HttpError(400, error.message);
     }
 
-    const newPhoneContact = await Contact.create({
-      ...req.body,
-      owner: req.user.id,
-    });
+    const newPhoneContact = await Contact.create(
+     { name, email, phone, owner }
+    );
 
-    res.status(201).json({
-     
-      name,
-      email,
-      phone
-    });
+    res.status(201).json(
+     newPhoneContact
+    );
   } catch (error) {
     next(error);
   }
