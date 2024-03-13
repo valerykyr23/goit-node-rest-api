@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import jsonwebtoken from "jsonwebtoken";
 import "dotenv/config";
 const SECRET_KEY = process.env.SECRET_KEY;
-import fs from "fs/promises";
+
 
 export const register = async (req, res, next) => {
   try {
@@ -22,7 +22,7 @@ export const register = async (req, res, next) => {
         subscription: newUser.subscription,
       },
     });
-    await fs.rename("../tmp/icon-256x256.png", "../public/avatars/icon-256x256.png");
+    
   } catch (error) {
     next(error);
   }

@@ -3,6 +3,7 @@ import express from "express";
 import "./db/contacts.js";
 import contactsRouter from "./routes/contactsRouter.js";
 import authRouter from "./routes/authRouter.js";
+import userRouter from "./routes/userRouter.js";
 
 
 
@@ -12,6 +13,7 @@ app.use(express.json());
 
 app.use("/api/auth", authRouter);
 app.use("/api/contacts", contactsRouter);
+app.use("/api/users", userRouter);
 
 app.use((_, res) => {
   res.status(404).json({ message: "Route not found" });
