@@ -8,13 +8,15 @@ import Jimp from "jimp";
 
 export const uploadAvatar = async (req, res, next) => {
     try {
-        await Jimp.read(req.file.path).then((img) =>
-    img.resize(250, 250).write(`${req.file.path}`)
-  );
-        await fs.rename(req.file.path, path.join(process.cwd(), "public/avatars", req.file.filename
-        ));
-        
 
+       console.log(req.file.path)
+        await Jimp.read(req.file.path).then((img) =>
+            img.resize(250, 250).write(`${req.file.path}`));
+  
+        await fs.rename(req.file.path, path.join(process.cwd(), "public/avatars", req.file.filename
+       ));
+        
+        
         const user = await User.findByIdAndUpdate(req.user.id, { avatarURL: req.file.filename }, { new: true });
     if (user === null) {
         throw HttpError(404, "User not found");
