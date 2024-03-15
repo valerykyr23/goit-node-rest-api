@@ -6,29 +6,31 @@ import "dotenv/config";
 const SECRET_KEY = process.env.SECRET_KEY;
 import gravatar from "gravatar";
 
-
-
-
-
 export const register = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
-    const userAvatar = gravatar.url(`${email}`, {s: '100', r: 'x', d: 'retro'}, false);
+    const userAvatar = gravatar.url(
+      `${email}`,
+      { s: "100", r: "x", d: "retro" },
+      false
+    );
 
     if (user) {
       throw HttpError(409, "Email  in use");
     }
     const hashPassword = await bcrypt.hash(password, 10);
-    const newUser = await User.create({ ...req.body, password: hashPassword, avatarURL: userAvatar });
+    const newUser = await User.create({
+      ...req.body,
+      password: hashPassword,
+      avatarURL: userAvatar,
+    });
     res.json({
       user: {
         email: newUser.email,
         subscription: newUser.subscription,
-        avatarURL: userAvatar,
       },
     });
-    
   } catch (error) {
     next(error);
   }

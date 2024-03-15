@@ -5,7 +5,11 @@ import upload from "../middlewars.js/upload.js";
 
 const userRouter = express.Router();
 
-
-userRouter.patch("/avatars", autenticate, upload.single("avatar"), uploadAvatar);
+userRouter.patch(
+  "/avatars",
+  autenticate,
+  upload.single("avatar"),
+  uploadAvatar
+);
 
 export default userRouter;
