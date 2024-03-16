@@ -14,10 +14,14 @@ export const uploadAvatar = async (req, res, next) => {
       req.file.path,
       path.join(process.cwd(), "public/avatars", req.file.filename)
     );
-
+    const avatarAddress = path.join(
+      process.cwd(),
+      "public/avatars",
+      req.file.filename
+    );
     const user = await User.findByIdAndUpdate(
       req.user.id,
-      { avatarURL: req.file.filename },
+      { avatarURL: avatarAddress },
       { new: true }
     );
     if (user === null) {
@@ -25,7 +29,7 @@ export const uploadAvatar = async (req, res, next) => {
     }
 
     res.status(200).json({
-      avatarURL: user.avatarURL,
+      avatarURL: avatarAddress,
     });
   } catch (error) {
     next(error);
