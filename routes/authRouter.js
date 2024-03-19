@@ -6,6 +6,7 @@ import {
   register,
   getCurrent,
   logout,
+  verify
 } from "../controllers/authControllers.js";
 import autenticate from "../middlewars.js/autenticate.js";
 import { uploadAvatar } from "../controllers/userControllers.js";
@@ -21,6 +22,8 @@ authRouter.get("/current", autenticate, getCurrent);
 
 authRouter.post("/logout", autenticate, logout);
 
-authRouter.patch("/avatars",autenticate,upload.single("avatar"),uploadAvatar);
+authRouter.patch("/avatars", autenticate, upload.single("avatar"), uploadAvatar);
+
+authRouter.get("/verify/:token", verify);
 
 export default authRouter;
