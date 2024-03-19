@@ -146,3 +146,35 @@ export const verify = async (req, res, next) => {
   }
   
 };
+
+export const resendVerificationEmail = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      throw HttpError(400, "Missing required field");
+    };
+const user = await User.findOne({ email });
+    if (user.verify === true) {
+
+      throw HttpError(400, "Verification has already been passed");
+    };
+
+    
+
+    await transport.sendMail({
+      to: email,
+      from: "valeranicus@gmail.com",
+      subject: "Verify Email",
+      html: `Please verify your email by clicking on the <a href="http://localhost:8080/users/verify/${user.verificationToken}"> email verification link</a>`,
+      text: `To confirm your email, please click on the link http://localhost:8080/users/verify/${user.verificationToken}`
+    });
+
+    await User.findByIdAndUpdate(user._id, { verify: true, verificationToken: null});
+
+     res.status(200).json("Verification email sent");
+  }
+
+  catch (error) {
+    next(error);
+  }
+};
