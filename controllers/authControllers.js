@@ -8,25 +8,16 @@ import gravatar from "gravatar";
 import nodemailer from "nodemailer";
 import crypto from "node:crypto";
 
-
 const { MAILTRAP_PASSWORD, MAILTRAP_USER } = process.env;
 
-
-
-const  transport = nodemailer.createTransport({
+const transport = nodemailer.createTransport({
   host: "sandbox.smtp.mailtrap.io",
   port: 2525,
   auth: {
     user: MAILTRAP_USER,
-    pass: MAILTRAP_PASSWORD
-  }
+    pass: MAILTRAP_PASSWORD,
+  },
 });
-
-
-// transport.sendMail(email)
-//     .then(() => console.log("Email was sent successfully!"))
-//     .catch(error => console.log(error.message));
-
 
 export const register = async (req, res, next) => {
   try {
@@ -49,7 +40,7 @@ export const register = async (req, res, next) => {
       from: "valeranicus@gmail.com",
       subject: "Verify Email",
       html: `Please verify your email by clicking on the <a href="http://localhost:8080/users/verify/${verificationToken}"> email verification link</a>`,
-      text: `To confirm your email, please click on the link http://localhost:8080/users/verify/${verificationToken}`
+      text: `To confirm your email, please click on the link http://localhost:8080/users/verify/${verificationToken}`,
     });
 
     const newUser = await User.create({
@@ -129,22 +120,22 @@ export const logout = async (req, res, next) => {
 };
 
 export const verify = async (req, res, next) => {
-
-  const {token} = req.params;
+  const { token } = req.params;
 
   try {
     const user = await User.findOne({ verificationToken: token });
     if (user === null) {
       throw HttpError(404, "Not found");
-    };
+    }
 
-   await  User.findByIdAndUpdate(user._id, {verify: true, verificationToken: null})
+    await User.findByIdAndUpdate(user._id, {
+      verify: true,
+      verificationToken: null,
+    });
     res.status(200).json("Verification successful");
-   }
-  catch (error) {
+  } catch (error) {
     next(error);
   }
-  
 };
 
 export const resendVerificationEmail = async (req, res, next) => {
@@ -152,29 +143,22 @@ export const resendVerificationEmail = async (req, res, next) => {
     const { email } = req.body;
     if (!email) {
       throw HttpError(400, "Missing required field");
-    };
-const user = await User.findOne({ email });
+    }
+    const user = await User.findOne({ email });
     if (user.verify === true) {
-
       throw HttpError(400, "Verification has already been passed");
-    };
-
-    
+    }
 
     await transport.sendMail({
       to: email,
       from: "valeranicus@gmail.com",
       subject: "Verify Email",
       html: `Please verify your email by clicking on the <a href="http://localhost:8080/users/verify/${user.verificationToken}"> email verification link</a>`,
-      text: `To confirm your email, please click on the link http://localhost:8080/users/verify/${user.verificationToken}`
+      text: `To confirm your email, please click on the link http://localhost:8080/users/verify/${user.verificationToken}`,
     });
 
-    await User.findByIdAndUpdate(user._id, { verify: true, verificationToken: null});
-
-     res.status(200).json("Verification email sent");
-  }
-
-  catch (error) {
+    res.status(200).json("Verification email sent");
+  } catch (error) {
     next(error);
   }
 };
